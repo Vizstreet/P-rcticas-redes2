@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +43,7 @@ public class Main extends javax.swing.JFrame {
         initComponents();
         this.isDirectorySelected = false;
         this.isFileSelected = false;
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -67,6 +67,7 @@ public class Main extends javax.swing.JFrame {
         words = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        directoryButton1 = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -74,6 +75,7 @@ public class Main extends javax.swing.JFrame {
         jLabel4.setText("jLabel4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(38, 65, 143));
@@ -150,6 +152,18 @@ public class Main extends javax.swing.JFrame {
         jLabel8.setForeground(new java.awt.Color(213, 0, 0));
         jLabel8.setText("confianza,comunicación, pasión y apoyo.");
 
+        directoryButton1.setBackground(new java.awt.Color(92, 107, 192));
+        directoryButton1.setFont(new java.awt.Font("Times New Roman", 3, 14)); // NOI18N
+        directoryButton1.setForeground(new java.awt.Color(255, 255, 255));
+        directoryButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/azul2.png"))); // NOI18N
+        directoryButton1.setText("Salir");
+        directoryButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        directoryButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                directoryButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -174,17 +188,20 @@ public class Main extends javax.swing.JFrame {
                                     .addComponent(directoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(267, 267, 267)
-                        .addComponent(jLabel7)))
+                        .addComponent(jLabel7))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(directoryButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(178, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                        .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(405, 405, 405))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel8)
-                        .addGap(371, 371, 371))))
+                        .addGap(371, 371, 371))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(405, 405, 405))))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,7 +222,9 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(54, 54, 54))
+                .addGap(10, 10, 10)
+                .addComponent(directoryButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         getContentPane().add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 150, 990, 390));
@@ -305,6 +324,10 @@ public class Main extends javax.swing.JFrame {
         this.isDirectorySelected = true;
     }//GEN-LAST:event_directoryButtonActionPerformed
 
+    private void directoryButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directoryButton1ActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_directoryButton1ActionPerformed
+
     private void processDirectory(textProcessing processor, pdfReader reader , String[] stop_words) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException {
         ArrayList<String> files;
         ArrayList<String> texts = new ArrayList<>();
@@ -379,6 +402,7 @@ public class Main extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton directoryButton;
+    private javax.swing.JButton directoryButton1;
     private javax.swing.JButton fileButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
