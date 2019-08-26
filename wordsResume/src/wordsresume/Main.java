@@ -6,15 +6,20 @@
 package wordsresume;
 
 import Classes.dotEnv;
+import Classes.my_thread;
 import Classes.pdfReader;
 import Classes.textProcessing;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -244,32 +249,27 @@ public class Main extends javax.swing.JFrame {
     private void startButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startButtonActionPerformed
         pdfReader reader = new pdfReader();
         textProcessing processor = new textProcessing();
-        ArrayList<String> files = null;
-        ArrayList<String> texts = new ArrayList<>();
         String[] stop_words = null;
-        try {
-            stop_words = processor.getStopWords();
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
         if(isDirectorySelected) {
-            files = reader.getFilesOnDirectory(this.directory_path);
-            for(String file: files) {
-                try {
-                    texts.add(reader.readFile(file));
-                } catch (IOException ex) {
-                    Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            JOptionPane.showMessageDialog(null,"Procesando los archivos en el directorio");
+            try {
+                stop_words = processor.getStopWords();
+                this.processDirectory(processor, reader, stop_words);
+            } catch (InterruptedException | FileNotFoundException | UnsupportedEncodingException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
+            JOptionPane.showMessageDialog(null,"Procesando el archivo");
             try {
-                texts.add(reader.readFile(this.file_path));
-            } catch (IOException ex) {
+                stop_words = processor.getStopWords();
+                this.processFile(processor, reader, stop_words);
+            } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_startButtonActionPerformed
 
+    
     private void wordsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_wordsActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_wordsActionPerformed
@@ -281,6 +281,23 @@ public class Main extends javax.swing.JFrame {
         this.isDirectorySelected = false;
     }//GEN-LAST:event_fileButtonActionPerformed
 
+    private void processFile(textProcessing processor, pdfReader reader , String[] stop_words) throws IOException, InterruptedException {
+        String text = reader.readFile(this.file_path);
+        if(words.getText().length() > 0) {
+            words_to_search = words.getText().split(","); 
+        }
+        my_thread thread = new my_thread(text, stop_words, words_to_search);
+        Thread new_thread = new Thread(thread);
+        new_thread.start();
+        new_thread.join();
+        
+        Map<String,Integer> result = new HashMap<>();
+        result = thread.get_results();
+        result.put("total_words", thread.get_total_words());
+        
+        reader.write_file(result,this.file_path);
+    }
+    
     private void directoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_directoryButtonActionPerformed
         pdfReader reader = new pdfReader();
         this.directory_path = reader.rute(env.getInitialPath(),"Select file","pdf",false);
@@ -288,6 +305,44 @@ public class Main extends javax.swing.JFrame {
         this.isDirectorySelected = true;
     }//GEN-LAST:event_directoryButtonActionPerformed
 
+    private void processDirectory(textProcessing processor, pdfReader reader , String[] stop_words) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException {
+        ArrayList<String> files;
+        ArrayList<String> texts = new ArrayList<>();
+        files = reader.getFilesOnDirectory(this.directory_path);
+        ArrayList<String> texts_paths = new ArrayList<>();
+        if(words.getText().length() > 0) {
+            words_to_search = words.getText().split(","); 
+        }
+        for(int index = 0; index < files.size(); index++){
+            File new_file = new File(files.get(index));
+            texts_paths.add(this.directory_path + "\\" + new_file);
+        }
+        Thread[] thread_array = new Thread[files.size()];
+        texts_paths.forEach((String file) -> {
+            System.out.println(file);
+            try {
+                texts.add(reader.readFile(file));
+            } catch (IOException ex) { Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex); }
+        });
+        my_thread threads[] = new my_thread[texts.size()];
+        for(int index = 0; index < texts.size(); index++) { threads[index] = new my_thread(texts.get(index),stop_words, words_to_search); }
+        
+        for(int index = 0; index < texts.size(); index++) {
+            thread_array[index] = new Thread(threads[index]);
+            thread_array[index].start();
+        }
+        
+        Map<String,Integer> list_of_results[] = new HashMap[texts.size()];
+        
+        for(int index = 0; index < texts.size(); index++){list_of_results[index] = new HashMap<>(); }
+        
+        for(int index = 0; index < texts.size(); index++) {
+            thread_array[index].join();
+            list_of_results[index] = threads[index].get_results();
+            list_of_results[index].put("total_words", threads[index].get_total_words());
+        }
+        reader.write_file(list_of_results, files);
+    }
     /**
      * @param args the command line arguments
      * @throws java.lang.ClassNotFoundException

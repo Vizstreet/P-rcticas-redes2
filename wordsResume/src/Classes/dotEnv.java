@@ -13,30 +13,38 @@ public class dotEnv {
     private String  stopWordsFile;
     private String processTextPython;
     private String initialPath;
+    private String out_file;
     public dotEnv() {
         this.setStopWords();
         this.setPythonFiles();
         this.setInitialPath();
+        this.setOutFilePath();
     }
     
     private void setStopWords() {
-        this.stopWordsFile = "C:\\Users\\josue\\Documents\\NetBeansProjects\\wordsResume\\Utils\\stopWords.txt";
+        this.stopWordsFile = "C:\\Users\\josue\\Documents\\GitHub\\P-rcticas-redes2\\wordsResume\\Utils\\stopWords.txt";
     }
     public  String getStopWordsFile() {
         return this.stopWordsFile;
     }
     
     private void setPythonFiles() {
-        this.processTextPython = "C:\\Users\\josue\\Documents\\NetBeansProjects\\wordsResume\\Utils\\Python\\processText.py";
+        this.processTextPython = "C:\\Users\\josue\\Documents\\GitHub\\P-rcticas-redes2\\wordsResume\\Utils\\Python\\processText.py";
     }
     public String getProcessTextPythonFile() {
         return this.processTextPython;
     }
     private void setInitialPath() {
-        this.initialPath = "C:\\Users\\josue\\Documents\\NetBeansProjects";
+        this.initialPath = "C:\\Users\\josue\\Downloads\\pdf";
     }
     public String getInitialPath() {
         return this.initialPath;
+    }
+    private void setOutFilePath() {
+        this.out_file = "C:\\Users\\josue\\Documents\\GitHub\\P-rcticas-redes2\\wordsResume\\Utils\\out.txt";
+    }
+    public String getOutFile() {
+        return this.out_file;
     }
     
 }

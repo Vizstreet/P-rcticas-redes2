@@ -7,8 +7,12 @@ package Classes;
 
 import java.awt.HeadlessException;
 import java.io.File; 
+import java.io.FileNotFoundException;
 import java.io.IOException; 
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -21,7 +25,12 @@ import org.apache.pdfbox.text.PDFTextStripper;
  */
 public class pdfReader {
     
-    public pdfReader() {}
+    private String message;
+    private final dotEnv env;
+    public pdfReader() {
+        this.message = "";
+        this.env = new dotEnv();
+    }
     
     
      public String rute(String actual_path,String title,String type,boolean isAFile){
@@ -44,7 +53,7 @@ public class pdfReader {
             }
         }
         catch(HeadlessException e) {
-            JOptionPane.showMessageDialog(null,"You didnt select any key yet");
+            JOptionPane.showMessageDialog(null,"You didnt select any pdf yet");
         }
         return null;
     }
@@ -75,6 +84,51 @@ public class pdfReader {
             }
         }
         return pdfFiles;
+    }
+    
+    public void write_file(Map<String,Integer> results[], ArrayList<String> filenames) throws FileNotFoundException, UnsupportedEncodingException{
+        this.message = "";
+        int index = 0;
+        for(Map<String,Integer>result: results) {
+            this.message += "filename: " + filenames.get(index++) +"\r\n";
+            result.forEach((String key, Integer value)->{
+                this.message += key + "," + value.toString() + "\r\n";
+            });
+            this.message += "#\r\n";
+        }
+         File out_file = new File(this.env.getOutFile());
+        if(out_file.exists()) {
+            out_file.delete();
+        }
+        File nuevo=new File(this.env.getOutFile());        
+        try (PrintWriter fw = new PrintWriter(nuevo,"utf-8")) {
+            fw.println(this.message);
+            fw.close();
+        }
+        this.message = "";
+        JOptionPane.showMessageDialog(null,"Ya hemos obtenido los resultados, en un momento se desplegará una pagina dónde podrá verlos");
+        
+    }
+    
+    public void write_file(Map<String,Integer> result, String filename) throws IOException{
+        this.message = "";
+        message += "filename: " + filename +"\r\n";
+        result.forEach((String key,Integer value)->{
+            this.message += key + "," + value.toString() + "\r\n";
+        });
+        this.message += "#";
+        
+        File out_file = new File(this.env.getOutFile());
+        if(out_file.exists()) {
+            out_file.delete();
+        }
+        File nuevo=new File(this.env.getOutFile());        
+        try (PrintWriter fw = new PrintWriter(nuevo,"utf-8")) {
+            fw.println(this.message);
+            fw.close();
+        }
+        this.message = "";
+        JOptionPane.showMessageDialog(null,"Ya hemos obtenido los resultados, en un momento se desplegará una pagina dónde podrá verlos");
     }
     
 }
