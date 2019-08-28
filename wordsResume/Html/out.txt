@@ -1,0 +1,38 @@
+﻿filename, Josue
+besos,0
+delicioso,0
+confianza,0
+comunicación,0
+cachondeo,0
+compañia,0
+total_words,6100
+pasión,0
+regalos,0
+apoyo,0
+#
+
+filename, Fer
+besos,0
+delicioso,0
+confianza,0
+comunicación,0
+cachondeo,0
+compañia,0
+total_words,6100
+pasión,0
+regalos,0
+apoyo,0
+#
+
+filename, Victor
+besos,0
+delicioso,0
+confianza,0
+comunicación,0
+cachondeo,0
+compañia,0
+total_words,6100
+pasión,0
+regalos,0
+apoyo,0
+#
